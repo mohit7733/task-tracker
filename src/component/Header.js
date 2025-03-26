@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { faPlus, faChartBar, faShareAlt, faDownload, faSun, faMoon, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faChartBar, faShareAlt, faDownload, faSun, faMoon, faUpload, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { toggleDarkMode, toggleTaskForm, toggleStatsDialog, toggleSharingDialog, toggleExportDialog, toggleImportDialog } from "../store/slices/uiSlice";
+import { toggleDarkMode, toggleTaskForm, toggleStatsDialog, toggleSharingDialog, toggleExportDialog, toggleImportDialog, toggleHistoryDialog } from "../store/slices/uiSlice";
 
 function Header() {
     const dispatch = useDispatch();
@@ -38,6 +38,9 @@ function Header() {
 
                     <button className="hover:text-gray-300" onClick={() => dispatch(toggleDarkMode())}>
                         <FontAwesomeIcon icon={isDarkMode ? faSun : faMoon} size="lg" title="Toggle Dark Mode" />
+                    </button>
+                    <button className="hover:text-gray-300" onClick={() => dispatch(toggleHistoryDialog())}>
+                        <FontAwesomeIcon icon={faHistory} size="lg" title="History" />
                     </button>
                 </div>
             </div>

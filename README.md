@@ -11,6 +11,8 @@ A modern, feature-rich task management application built with React and Redux To
 - Task prioritization (High, Medium, Low)
 - Due date tracking
 - Task categorization
+- History tracking of deleted tasks
+- Undo deleted tasks functionality
 
 ### Advanced Features
 - Dark/Light mode support
@@ -25,6 +27,10 @@ A modern, feature-rich task management application built with React and Redux To
   - Category distribution
 - Task sharing functionality
 - Data export capabilities
+- Task history management
+  - View recently deleted tasks
+  - Restore tasks from history
+  - Automatic cleanup of old history items
 
 ### User Interface
 - Responsive design
@@ -33,6 +39,7 @@ A modern, feature-rich task management application built with React and Redux To
 - Drag-and-drop interface
 - Modal dialogs for forms and sharing
 - Snackbar notifications
+- History dialog with restore options
 
 ## Tech Stack
 

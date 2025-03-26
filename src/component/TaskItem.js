@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGripVertical, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useState } from 'react';
 
 const priorityColors = {
     high: 'bg-red-500',
@@ -15,8 +16,8 @@ const priorityColors = {
 function TaskItem({ task, index }) {
     const dispatch = useDispatch();
     const isDarkMode = useSelector((state) => state.ui.isDarkMode);
-    const { attributes, listeners, setNodeRef, transform, transition } =
-        useSortable({ id: task.id });
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: task.id });
+    const [showConfirm, setShowConfirm] = useState(false);
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
@@ -48,6 +49,33 @@ function TaskItem({ task, index }) {
                 relative flex-row flex-wrap md:flex-nowrap md:flex-row md:gap-4  md:w-[calc(50%-10px)] w-full
             `}
         >
+
+            {showConfirm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className={`w-full max-w-md rounded-lg shadow-xl p-6 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
+                        <h3 className="text-xl font-semibold mb-4">Confirm Delete</h3>
+                        <p className="mb-6">Are you sure you want to delete this task? if you do, it will be moved to the history.</p>
+                        <div className="flex justify-end gap-4">
+                            <button
+                                onClick={() => setShowConfirm(false)}
+                                className="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => {
+                                    handleDelete();
+                                    setShowConfirm(false);
+                                }}
+                                className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div
                 className="text-gray-500 mr-2 cursor-grab"
                 role="button"
@@ -143,7 +171,7 @@ function TaskItem({ task, index }) {
                 </button>
 
                 <button
-                    onClick={handleDelete}
+                    onClick={() => setShowConfirm(true)}
                     className={`
                         md:p-1 ${!isDarkMode ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} rounded-full transition-colors
                         md:w-8 md:h-8 w-6 h-6

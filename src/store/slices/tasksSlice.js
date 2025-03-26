@@ -1,36 +1,57 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
-// Returns empty array if something goes wrong
+// Load tasks from localStorage with error handling
 const loadTasksFromStorage = () => {
   try {
     const tasks = localStorage.getItem('tasks');
     return tasks ? JSON.parse(tasks) : [];
   } catch (err) {
-    console.error('Oops, failed to load tasks:', err);
+    console.error('Failed to load tasks:', err);
     return [];
   }
 };
 
-// Helper to save tasks to localStorage
+// Save tasks to localStorage with error handling
 const saveTasksToStorage = (tasks) => {
   try {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   } catch (err) {
-    console.error('Uh oh, failed to save tasks:', err);
+    console.error('Failed to save tasks:', err);
   }
 };
 
-// Our initial state 
+// Load history from localStorage with error handling
+const loadHistoryFromStorage = () => {
+  try {
+    const history = localStorage.getItem('history');
+    return history ? JSON.parse(history) : [];
+  } catch (err) {
+    console.error('Failed to load history:', err);
+    return [];
+  }
+};
+
+// Save history to localStorage with error handling
+const saveHistoryToStorage = (history) => {
+  try {
+    localStorage.setItem('history', JSON.stringify(history));
+  } catch (err) {
+    console.error('Failed to save history:', err);
+  }
+};
+
+// Initial state
 export const initialState = {
   tasks: loadTasksFromStorage(),
   status: 'idle',
   error: null,
+  history: loadHistoryFromStorage(),
 };
 
-// This handles adding new tasks asynchronously
+// Async thunk for adding new tasks
 export const addTask = createAsyncThunk(
-  'tasks/addTask', //type prefix
+  'tasks/addTask',
   async (task) => {
     const newTask = {
       ...task,
@@ -42,12 +63,11 @@ export const addTask = createAsyncThunk(
   }
 );
 
-// The main slice 
+// Tasks slice
 export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    // Toggle a task
     toggleTask: (state, action) => {
       const task = state.tasks.find(t => t.id === action.payload);
       if (task) {
@@ -56,13 +76,11 @@ export const tasksSlice = createSlice({
       }
     },
 
-    // Import tasks
     importTasks: (state, action) => {
       state.tasks = action.payload;
       saveTasksToStorage(state.tasks);
     },
 
-    // Update an existing task with new data
     updateTask: (state, action) => {
       const index = state.tasks.findIndex(t => t.id === action.payload.id);
       if (index !== -1) {
@@ -70,20 +88,30 @@ export const tasksSlice = createSlice({
         saveTasksToStorage(state.tasks);
       }
     },
-    // Bye bye task
+
     deleteTask: (state, action) => {
-      state.tasks = state.tasks.filter(t => t.id !== action.payload);
-      saveTasksToStorage(state.tasks);
+      const task = state.tasks.find(t => t.id === action.payload);
+      if (task) {
+        state.history.push(task);
+        state.tasks = state.tasks.filter(t => t.id !== action.payload);
+        saveTasksToStorage(state.tasks);
+        saveHistoryToStorage(state.history);
+      }
     },
 
-    // Drag and drop reordering  
+    undoDelete: (state, action) => {
+      state.history = state.history.filter(t => t.id !== action.payload.id);
+      state.tasks.push(action.payload);
+      saveTasksToStorage(state.tasks);
+      saveHistoryToStorage(state.history);
+    },
+
     reorderTasks: (state, action) => {
       state.tasks = action.payload;
       saveTasksToStorage(state.tasks);
     },
   },
 
-  // Handle async task adding states
   extraReducers: (builder) => {
     builder
       .addCase(addTask.pending, (state) => {
@@ -107,6 +135,7 @@ export const {
   deleteTask,
   reorderTasks,
   importTasks,
+  undoDelete,
 } = tasksSlice.actions;
 
 export default tasksSlice.reducer;

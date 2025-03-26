@@ -8,6 +8,7 @@ export const initialState = {
     isSharingDialogOpen: false,
     isExportDialogOpen: false,
     isImportDialogOpen: false,
+    isHistoryDialogOpen: false,
 };
 
 export const uiSlice = createSlice({
@@ -42,6 +43,9 @@ export const uiSlice = createSlice({
         toggleImportDialog: (state) => {
             state.isImportDialogOpen = !state.isImportDialogOpen;
         },
+        toggleHistoryDialog: (state) => {
+            state.isHistoryDialogOpen = !state.isHistoryDialogOpen;
+        },
     },
 });
 
@@ -53,6 +57,7 @@ export const {
     toggleSharingDialog,
     toggleExportDialog,
     toggleImportDialog,
+    toggleHistoryDialog,
 } = uiSlice.actions;
 
 export default uiSlice.reducer; 

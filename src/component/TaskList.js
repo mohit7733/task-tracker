@@ -15,7 +15,6 @@ import {
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { reorderTasks } from '../store/slices/tasksSlice';
@@ -57,7 +56,6 @@ function TaskList() {
         })
             .sort((a, b) => {
                 const order = filters.sortOrder === 'asc' ? 1 : -1;
-
                 switch (filters.sortBy) {
                     case 'priority':
                         const priorityOrder = { high: 3, medium: 2, low: 1 };
@@ -82,7 +80,6 @@ function TaskList() {
 
     const handleDragEnd = (event) => {
         const { active, over } = event;
-
         if (active.id !== over.id) {
             const oldIndex = tasks.findIndex((item) => item.id === active.id);
             const newIndex = tasks.findIndex((item) => item.id === over.id);
