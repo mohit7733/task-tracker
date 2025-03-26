@@ -1,0 +1,9 @@
+[
+  {
+    "title": "Task 1",
+    "description": "Complete the first task description.",
+    "priority": "high",
+    "category": "Work",
+    "dueDate": "2025-04-01"
+  }
+]

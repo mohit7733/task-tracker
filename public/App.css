@@ -1,0 +1,36 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+.form-control>div {
+    position: relative;
+}
+
+.form-control>div>label {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: 400;
+}
+
+@media (max-width: 640px) {
+    .form-control>div {
+        margin-top: 10px;
+    }
+
+    .item-content {
+        flex: 1 0 100%;
+        margin: 10px 0;
+    }
+
+    .form-control select,
+    .form-control>div {
+        width: 100%;
+    }
+
+    .form-control>div>label {
+        padding: 0;
+    }
+}
